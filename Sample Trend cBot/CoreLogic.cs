@@ -35,31 +35,31 @@ namespace cAlgo
         [Parameter("Stop Loss", DefaultValue = 20)]
         public int StopLoss { get; set; }
 
-        private const string label = "Sample Trend cBot";
-        private  MovingAverageCrossOver maAlert;
+        private const string Label = "Sample Trend cBot";
+        private  MovingAverageCrossOver _maAlert;
         
         protected override void OnStart()
         {
-            maAlert = new MovingAverageCrossOver(this, SourceSeries, FastPeriods, SlowPeriods, MAType);
+            _maAlert = new MovingAverageCrossOver(this, SourceSeries, FastPeriods, SlowPeriods, MAType);
         }
 
 
         protected override void OnTick()
         {
-            var longPosition = Positions.Find(label, Symbol, TradeType.Buy);
-            var shortPosition = Positions.Find(label, Symbol, TradeType.Sell);
+            var longPosition = Positions.Find(Label, Symbol, TradeType.Buy);
+            var shortPosition = Positions.Find(Label, Symbol, TradeType.Sell);
 
-            if (maAlert.IndicatorAlert() == "AlertLong" && longPosition == null)
+            if (_maAlert.IndicatorAlert() == "AlertLong" && longPosition == null)
             {
                 if (shortPosition != null)
                     ClosePosition(shortPosition);
-                ExecuteMarketOrder(TradeType.Buy, Symbol, VolumeInUnits, label, StopLoss, TakeProfit);
+                ExecuteMarketOrder(TradeType.Buy, Symbol, VolumeInUnits, Label, StopLoss, TakeProfit);
             }
-            else if (maAlert.IndicatorAlert() == "AlertShort" && shortPosition == null)
+            else if (_maAlert.IndicatorAlert() == "AlertShort" && shortPosition == null)
             {
                 if (longPosition != null)
                     ClosePosition(longPosition);
-                ExecuteMarketOrder(TradeType.Sell, Symbol, VolumeInUnits, label, StopLoss, TakeProfit);
+                ExecuteMarketOrder(TradeType.Sell, Symbol, VolumeInUnits, Label, StopLoss, TakeProfit);
             }
         }
 
