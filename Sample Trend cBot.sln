@@ -1,7 +1,8 @@
-
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample Trend cBot", "Sample Trend cBot\Sample Trend cBot.csproj", "{32FBD1DF-4635-4F16-9287-3CF4F9EB6280}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.2046
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FxAutomatedTradingAlgorithm", "Sample Trend cBot\FxAutomatedTradingAlgorithm.csproj", "{32FBD1DF-4635-4F16-9287-3CF4F9EB6280}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -16,5 +17,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4FEB9E43-3832-4733-85AC-726437C31224}
 	EndGlobalSection
 EndGlobal
