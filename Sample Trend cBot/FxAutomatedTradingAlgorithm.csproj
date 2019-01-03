@@ -45,7 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoreLogic.cs" />
-    <Compile Include="Indicators.cs" />
+    <Compile Include="IndicatorFactory.cs" />
+    <Compile Include="Interfaces\IIndicators.cs" />
+    <Compile Include="MovingAverageCrossOver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

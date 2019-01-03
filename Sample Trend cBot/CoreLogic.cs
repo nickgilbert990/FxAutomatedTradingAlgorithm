@@ -7,7 +7,6 @@ using cAlgo.API;
 using cAlgo.API.Indicators;
 using cAlgo.API.Internals;
 using cAlgo.Indicators;
-using Indicators;
 
 namespace cAlgo
 {
@@ -35,27 +34,45 @@ namespace cAlgo
         [Parameter("Stop Loss", DefaultValue = 20)]
         public int StopLoss { get; set; }
 
-        private const string Label = "Sample Trend cBot";
-        private  MovingAverageCrossOver _maAlert;
+        private const string Label = "FxAutomation";
+        private  IIndicators _indicator;
+
+        ///<summary>
+        /// Parameters to be passed into the indicator factory
+        /// </summary>
+
+        public class FactoryParameters
+        {
+            public string IndicatorType;
+            public MovingAverageType MAType;
+            public DataSeries SourceSeries;
+            public int SlowPeriods;
+            public int FastPeriods;
+            public SampleTrendcBot Bot;
+        }
         
         protected override void OnStart()
         {
-            _maAlert = new MovingAverageCrossOver(this, SourceSeries, FastPeriods, SlowPeriods, MAType);
-        }
+            ///<summary>
+            /// Initialsise parameters from input data and pass to the factory which returns the object identified by IndicatorType
+            /// </summary>
 
+            var factoryParameters = new FactoryParameters {Bot = this, IndicatorType = "MA", MAType = MAType, FastPeriods = FastPeriods, SlowPeriods = SlowPeriods, SourceSeries = SourceSeries};
+            _indicator = new IndicatorFactory().GetIndicator(factoryParameters);
+        }
 
         protected override void OnTick()
         {
             var longPosition = Positions.Find(Label, Symbol, TradeType.Buy);
             var shortPosition = Positions.Find(Label, Symbol, TradeType.Sell);
 
-            if (_maAlert.IndicatorAlert() == "AlertLong" && longPosition == null)
+            if (_indicator.IndicatorAlert() == "AlertLong" && longPosition == null)
             {
                 if (shortPosition != null)
                     ClosePosition(shortPosition);
                 ExecuteMarketOrder(TradeType.Buy, Symbol, VolumeInUnits, Label, StopLoss, TakeProfit);
             }
-            else if (_maAlert.IndicatorAlert() == "AlertShort" && shortPosition == null)
+            else if (_indicator.IndicatorAlert() == "AlertShort" && shortPosition == null)
             {
                 if (longPosition != null)
                     ClosePosition(longPosition);
@@ -67,7 +84,6 @@ namespace cAlgo
         {
             get { return Symbol.QuantityToVolume(Quantity); }
         }
-
     }
 }
 

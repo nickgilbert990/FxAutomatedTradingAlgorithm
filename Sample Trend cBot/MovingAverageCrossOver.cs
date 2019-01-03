@@ -2,18 +2,19 @@
 using cAlgo.API;
 using cAlgo.API.Indicators;
 
-namespace Indicators
+namespace cAlgo
 {
-    public class MovingAverageCrossOver
+    public class MovingAverageCrossOver : IIndicators
     {
         private MovingAverage _slowMa;
         private MovingAverage _fastMa;
         private string _alert = null;
 
-        public MovingAverageCrossOver(SampleTrendcBot bot, DataSeries sourceSeries, int fastPeriods, int slowPeriods, MovingAverageType mAType)
+        public MovingAverageCrossOver(SampleTrendcBot.FactoryParameters inputParameters)
         {
-            _fastMa = bot.Indicators.MovingAverage(sourceSeries, fastPeriods, mAType);
-            _slowMa = bot.Indicators.MovingAverage(sourceSeries, slowPeriods, mAType);
+
+            _fastMa = inputParameters.Bot.Indicators.MovingAverage(inputParameters.SourceSeries, inputParameters.FastPeriods, inputParameters.MAType);
+            _slowMa = inputParameters.Bot.Indicators.MovingAverage(inputParameters.SourceSeries, inputParameters.SlowPeriods, inputParameters.MAType);
         }
 
         public string IndicatorAlert()
