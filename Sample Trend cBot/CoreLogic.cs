@@ -31,7 +31,7 @@ namespace cAlgo
         [Parameter("Take Profit", DefaultValue = 20)]
         public int TakeProfit { get; set; }
 
-        [Parameter("Stop Loss", DefaultValue = 20)]
+        [Parameter("Stop Loss", DefaultValue = 30)]
         public int StopLoss { get; set; }
 
         private const string Label = "FxAutomation";
