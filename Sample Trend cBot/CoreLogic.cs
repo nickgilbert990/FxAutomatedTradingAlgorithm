@@ -18,19 +18,19 @@ namespace cAlgo.Main
         [Parameter()]
         public DataSeries SourceSeries { get; set; }
 
-        [Parameter("Slow Periods", DefaultValue = 10)]
+        [Parameter("Slow Periods", DefaultValue = 120)]
         public int SlowPeriods { get; set; }
 
-        [Parameter("Fast Periods", DefaultValue = 5)]
+        [Parameter("Fast Periods", DefaultValue = 40)]
         public int FastPeriods { get; set; }
 
-        [Parameter("Quantity (Lots)", DefaultValue = 1, MinValue = 0.01, Step = 0.01)]
+        [Parameter("Quantity (Lots)", DefaultValue = 0.1, MinValue = 0.01, Step = 0.01)]
         public double Quantity { get; set; }
 
-        [Parameter("Take Profit", DefaultValue = 20)]
+        [Parameter("Take Profit", DefaultValue = 10)]
         public int TakeProfit { get; set; }
 
-        [Parameter("Stop Loss", DefaultValue = 30)]
+        [Parameter("Stop Loss", DefaultValue = 20)]
         public int StopLoss { get; set; }
 
         public string Label = "FxAutomation";
