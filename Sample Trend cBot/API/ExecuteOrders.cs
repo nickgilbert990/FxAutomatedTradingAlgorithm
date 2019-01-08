@@ -21,7 +21,7 @@ namespace cAlgo.API
             }
             catch (Exception e)
             {
-                Console.Write(e);
+                Console.WriteLine(e);
                 return false;
             }          
             

@@ -1,4 +1,5 @@
-﻿using cAlgo.Main;
+﻿using System;
+using cAlgo.Main;
 
 namespace cAlgo.API
 {
@@ -13,7 +14,16 @@ namespace cAlgo.API
 
         public bool ClosePosition(Position position)
         {
-            return false;
+            try
+            {
+                ClosePosition(position);
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
         }
 
     }
