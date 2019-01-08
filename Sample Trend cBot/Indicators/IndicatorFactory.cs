@@ -1,5 +1,7 @@
 ﻿using System.Runtime.Remoting.Messaging;
 using cAlgo.API;
+using cAlgo.Indicators;
+using cAlgo.Main;
 
 namespace cAlgo
 {

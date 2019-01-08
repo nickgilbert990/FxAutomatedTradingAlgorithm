@@ -44,10 +44,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\CloseOrders.cs" />
+    <Compile Include="API\ExecuteOrders.cs" />
+    <Compile Include="API\GetOpenPositions.cs" />
     <Compile Include="CoreLogic.cs" />
-    <Compile Include="IndicatorFactory.cs" />
+    <Compile Include="Indicators\IndicatorFactory.cs" />
     <Compile Include="Interfaces\IIndicators.cs" />
-    <Compile Include="MovingAverageCrossOver.cs" />
+    <Compile Include="Indicators\MovingAverageCrossOver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

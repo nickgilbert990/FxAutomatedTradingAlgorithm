@@ -1,15 +1,13 @@
 ﻿// -------------------------------------------------------------------------------------------------
 using System;
-using System.Globalization;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using cAlgo;
 using cAlgo.API;
 using cAlgo.API.Indicators;
 using cAlgo.API.Internals;
 using cAlgo.Indicators;
 
-namespace cAlgo
+namespace cAlgo.Main
 {
     [Robot(TimeZone = TimeZones.UTC, AccessRights = AccessRights.None)]
     public class SampleTrendcBot : Robot
@@ -38,6 +36,8 @@ namespace cAlgo
         public string Label = "FxAutomation";
         private  IIndicators _indicator;
         private GetOpenPositions _getOpenPositions;
+        private CloseOrders _closeOrders;
+        private ExecuteOrders _executeOrders;
 
         ///<summary>
         /// Parameters to be passed into the indicator factory
@@ -61,64 +61,65 @@ namespace cAlgo
             _indicator = new IndicatorFactory().GetIndicator(factoryParameters);
 
             ///<summary>
-            /// Instanciate positions object to abstract API functions from the main logic
+            /// Creaqte instances of API objects to decouple API functions from the main logic
+            /// and support mocking
             /// </summary>
             _getOpenPositions = new GetOpenPositions(this);
+            _closeOrders      = new CloseOrders(this);
+            _executeOrders    = new ExecuteOrders(this);
         }
 
+        ///<summary>
+        /// Main processing logic executed on price tick
+        /// </summary>
         protected override void OnTick()
         {
             ///<summary>
             /// Get open positions
             /// </summary>
-            var longPositions = _getOpenPositions.LongPositions();
+            var longPositions  = _getOpenPositions.LongPositions();
+            var shortPositions = _getOpenPositions.ShortPositions();
+            ///<summary>
+            /// Old direct API code - to be removed after testing
+            /// var longPosition = Positions.Find(Label, Symbol, TradeType.Buy);
+            /// var shortPosition = Positions.Find(Label, Symbol, TradeType.Sell);            ///
+            /// </summary>
 
-            var longPosition = Positions.Find(Label, Symbol, TradeType.Buy);
-            var shortPosition = Positions.Find(Label, Symbol, TradeType.Sell);
-
-            if (_indicator.IndicatorAlert() == "AlertLong" && longPosition == null)
+            if (_indicator.IndicatorAlert() == "AlertLong" && longPositions == null)
             {
-                if (shortPosition != null)
-                    ClosePosition(shortPosition);
-                ExecuteMarketOrder(TradeType.Buy, Symbol, VolumeInUnits, Label, StopLoss, TakeProfit);
+                if (shortPositions != null)
+                    _closeOrders.ClosePosition(shortPositions);
+                    ///<summary>
+                    /// Old direct API code - to be removed after testing
+                    /// ClosePosition(shortPositions);
+                    ///</summary>
+
+                _executeOrders.ExecuteBuyOrder();
+                ///<summary>
+                /// Old direct API code - to be removed after testing
+                /// ExecuteMarketOrder(TradeType.Buy, Symbol, VolumeInUnits, Label, StopLoss, TakeProfit);
+                /// </summary>
             }
-            else if (_indicator.IndicatorAlert() == "AlertShort" && shortPosition == null)
+            else if (_indicator.IndicatorAlert() == "AlertShort" && shortPositions == null)
             {
-                if (longPosition != null)
-                    ClosePosition(longPosition);
-                ExecuteMarketOrder(TradeType.Sell, Symbol, VolumeInUnits, Label, StopLoss, TakeProfit);
+                if (longPositions != null)
+                    _closeOrders.ClosePosition(longPositions);
+
+                _executeOrders.ExecuteSellOrder();
+                ///<summary>
+                /// Old direct API code - to be removed after testing
+                /// ExecuteMarketOrder(TradeType.Sell, Symbol, VolumeInUnits, Label, StopLoss, TakeProfit);
+                ///</summary>
+
             }
         }
 
-        private long VolumeInUnits
+        public long VolumeInUnits
         {
+            #pragma warning disable 0618
             get { return Symbol.QuantityToVolume(Quantity); }
         }
     }
 
-    ///<summary>
-    /// Get open positions from the cAlgo API passing the instance of the main class into the constructor.
-    /// The purpose of this helper class is to abstract the API calls from the main logic.
-    /// </summary>
-    public class GetOpenPositions 
-    {
-        private SampleTrendcBot _bot;
-
-        public GetOpenPositions(SampleTrendcBot bot)
-        {
-            _bot = bot;
-        }
-
-        public Position LongPositions()
-        {
-            return _bot.Positions.Find(_bot.Label, _bot.Symbol, TradeType.Buy);
-        }
-
-        public Position ShortPositions()
-        {
-            return _bot.Positions.Find(_bot.Label, _bot.Symbol, TradeType.Sell);
-        }
-
-    }
 }
 

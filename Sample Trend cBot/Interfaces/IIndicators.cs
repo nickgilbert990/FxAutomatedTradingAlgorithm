@@ -1,6 +1,6 @@
 ﻿using cAlgo.API;
 
-namespace cAlgo
+namespace cAlgo.Indicators
 {
     public interface IIndicators
     {

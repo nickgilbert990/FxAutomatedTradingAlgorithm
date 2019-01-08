@@ -1,8 +1,10 @@
 ﻿using cAlgo;
 using cAlgo.API;
 using cAlgo.API.Indicators;
+using cAlgo.Indicators;
+using cAlgo.Main;
 
-namespace cAlgo
+namespace cAlgo.Indicators
 {
     public class MovingAverageCrossOver : IIndicators
     {
@@ -23,6 +25,7 @@ namespace cAlgo
             var currentFastMa = _fastMa.Result.Last(0);
             var previousSlowMa = _slowMa.Result.Last(1);
             var previousFastMa = _fastMa.Result.Last(1);
+            _alert = null;
 
             if (previousSlowMa > previousFastMa && currentSlowMa <= currentFastMa)
             {
