@@ -7,7 +7,7 @@ namespace cAlgo
 {
     public class IndicatorFactory
     {
-        public IIndicators GetIndicator(SampleTrendcBot.FactoryParameters inputParameters)
+        public IIndicators GetIndicator(TradeAutomation.FactoryParameters inputParameters)
         {
             switch (inputParameters.IndicatorType)
             {

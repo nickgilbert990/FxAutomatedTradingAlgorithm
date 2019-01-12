@@ -44,10 +44,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\CloseOrders.cs" />
-    <Compile Include="API\ExecuteOrders.cs" />
-    <Compile Include="API\GetOpenPositions.cs" />
-    <Compile Include="CoreLogic.cs" />
+    <Compile Include="Platform API\CloseOrders.cs" />
+    <Compile Include="Platform API\ExecuteOrders.cs" />
+    <Compile Include="Platform API\GetOpenPositions.cs" />
+    <Compile Include="Core.cs" />
     <Compile Include="Indicators\IndicatorFactory.cs" />
     <Compile Include="Interfaces\IIndicators.cs" />
     <Compile Include="Indicators\MovingAverageCrossOver.cs" />

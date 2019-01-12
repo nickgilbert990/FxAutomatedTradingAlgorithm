@@ -5,9 +5,9 @@ namespace cAlgo.API
 {
     public class CloseOrders
     {
-        private SampleTrendcBot _bot;
+        private readonly TradeAutomation _bot;
 
-        public CloseOrders(SampleTrendcBot bot)
+        public CloseOrders(TradeAutomation bot)
         {
             _bot = bot;
         }
@@ -16,7 +16,7 @@ namespace cAlgo.API
         {
             try
             {
-                ClosePosition(position);
+                _bot.ClosePosition(position);
                 return true;
             }
             catch (Exception e)

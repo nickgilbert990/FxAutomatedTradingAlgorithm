@@ -10,7 +10,7 @@ using cAlgo.Indicators;
 namespace cAlgo.Main
 {
     [Robot(TimeZone = TimeZones.UTC, AccessRights = AccessRights.None)]
-    public class SampleTrendcBot : Robot
+    public class TradeAutomation : Robot
     {
         [Parameter("MA Type")]
         public MovingAverageType MAType { get; set; }
@@ -34,10 +34,12 @@ namespace cAlgo.Main
         public int StopLoss { get; set; }
 
         public string Label = "FxAutomation";
+
         private  IIndicators _indicator;
         private GetOpenPositions _getOpenPositions;
         private CloseOrders _closeOrders;
         private ExecuteOrders _executeOrders;
+        private ManageOrders _manageOrders;
 
         ///<summary>
         /// Parameters to be passed into the indicator factory
@@ -49,7 +51,7 @@ namespace cAlgo.Main
             public DataSeries SourceSeries;
             public int SlowPeriods;
             public int FastPeriods;
-            public SampleTrendcBot Bot;
+            public TradeAutomation Bot;
         }
         
         protected override void OnStart()
@@ -61,12 +63,13 @@ namespace cAlgo.Main
             _indicator = new IndicatorFactory().GetIndicator(factoryParameters);
 
             ///<summary>
-            /// Creaqte instances of API objects to decouple API functions from the main logic
-            /// and support mocking
+            /// Create instances of API objects to decouple API functions from the main logic in order to 
+            /// support unit testing and mocking
             /// </summary>
             _getOpenPositions = new GetOpenPositions(this);
             _closeOrders      = new CloseOrders(this);
             _executeOrders    = new ExecuteOrders(this);
+            _manageOrders     = new ManageOrders();
         }
 
         ///<summary>
@@ -74,50 +77,44 @@ namespace cAlgo.Main
         /// </summary>
         protected override void OnTick()
         {
-            ///<summary>
-            /// Get open positions
-            /// </summary>
-            var longPositions  = _getOpenPositions.LongPositions();
-            var shortPositions = _getOpenPositions.ShortPositions();
-            ///<summary>
-            /// Old direct API code - to be removed after testing
-            /// var longPosition = Positions.Find(Label, Symbol, TradeType.Buy);
-            /// var shortPosition = Positions.Find(Label, Symbol, TradeType.Sell);            ///
-            /// </summary>
-
-            if (_indicator.IndicatorAlert() == "AlertLong" && longPositions == null)
-            {
-                if (shortPositions != null)
-                    _closeOrders.ClosePosition(shortPositions);
-                    ///<summary>
-                    /// Old direct API code - to be removed after testing
-                    /// ClosePosition(shortPositions);
-                    ///</summary>
-
-                _executeOrders.ExecuteBuyOrder();
-                ///<summary>
-                /// Old direct API code - to be removed after testing
-                /// ExecuteMarketOrder(TradeType.Buy, Symbol, VolumeInUnits, Label, StopLoss, TakeProfit);
-                /// </summary>
-            }
-            else if (_indicator.IndicatorAlert() == "AlertShort" && shortPositions == null)
-            {
-                if (longPositions != null)
-                    _closeOrders.ClosePosition(longPositions);
-
-                _executeOrders.ExecuteSellOrder();
-                ///<summary>
-                /// Old direct API code - to be removed after testing
-                /// ExecuteMarketOrder(TradeType.Sell, Symbol, VolumeInUnits, Label, StopLoss, TakeProfit);
-                ///</summary>
-
-            }
+            _manageOrders.ExecuteBuyOrSellOrderOnSignal(_indicator, _getOpenPositions, _closeOrders, _executeOrders);           
         }
 
         public long VolumeInUnits
         {
             #pragma warning disable 0618
             get { return Symbol.QuantityToVolume(Quantity); }
+        }
+    }
+
+    ///<summary>
+    /// This class is called after every price tick. The purpose is to check for buy or sell alerts
+    /// and call abstract API methods to close old orders and create new ones.
+    /// </summary>
+    public class ManageOrders
+    {
+        ///<summary>
+        /// This method receives initialised API objects and calls their methods buy, sell and close
+        /// orders on the trading server. 
+        /// </summary>
+        public void ExecuteBuyOrSellOrderOnSignal(IIndicators indicators, GetOpenPositions getOpenPositions,
+                                                  CloseOrders closeOrders, ExecuteOrders executeOrders)
+        {
+            if (indicators.IndicatorAlert() == "AlertLong" && getOpenPositions.LongPositions() == null)
+            {
+                if (getOpenPositions.ShortPositions() != null)
+                    closeOrders.ClosePosition(getOpenPositions.ShortPositions());
+
+                executeOrders.ExecuteBuyOrder();
+            }
+            else if (indicators.IndicatorAlert() == "AlertShort" && getOpenPositions.ShortPositions() == null)
+            {
+                if (getOpenPositions.LongPositions() != null)
+                    closeOrders.ClosePosition(getOpenPositions.LongPositions());
+
+                executeOrders.ExecuteSellOrder();
+            }
+
         }
     }
 

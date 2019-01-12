@@ -12,7 +12,7 @@ namespace cAlgo.Indicators
         private MovingAverage _fastMa;
         private string _alert = null;
 
-        public MovingAverageCrossOver(SampleTrendcBot.FactoryParameters inputParameters)
+        public MovingAverageCrossOver(TradeAutomation.FactoryParameters inputParameters)
         {
 
             _fastMa = inputParameters.Bot.Indicators.MovingAverage(inputParameters.SourceSeries, inputParameters.FastPeriods, inputParameters.MAType);

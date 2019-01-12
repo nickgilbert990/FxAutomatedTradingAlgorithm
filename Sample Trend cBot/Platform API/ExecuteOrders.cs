@@ -5,9 +5,9 @@ namespace cAlgo.API
 {
     public class ExecuteOrders
     {
-        private SampleTrendcBot _bot;
+        private readonly TradeAutomation _bot;
 
-        public ExecuteOrders(SampleTrendcBot bot)
+        public ExecuteOrders(TradeAutomation bot)
         {
             _bot = bot;
         }

@@ -8,9 +8,9 @@ namespace cAlgo.API
     /// </summary>
     public class GetOpenPositions
     {
-        private SampleTrendcBot _bot;
+        private readonly TradeAutomation _bot;
 
-        public GetOpenPositions(SampleTrendcBot bot)
+        public GetOpenPositions(TradeAutomation bot)
         {
             _bot = bot;
         }
