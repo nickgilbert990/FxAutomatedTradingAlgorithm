@@ -89,7 +89,7 @@ namespace cAlgo.Main
 
     ///<summary>
     /// This class is called after every price tick. The purpose is to check for buy or sell alerts
-    /// and call abstract API methods to close old orders and create new ones.
+    /// and call abstract API methods to close old orders and create new ones.  
     /// </summary>
     public class ManageOrders
     {
