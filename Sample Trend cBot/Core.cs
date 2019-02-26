@@ -42,7 +42,7 @@ namespace cAlgo.Main
         private ManageOrders _manageOrders;
 
         ///<summary>
-        /// Parameters to be passed into the indicator factory
+        /// Parameters to be passed into the indicator factory  
         /// </summary>
         public struct FactoryParameters
         {
